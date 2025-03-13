@@ -1,9 +1,11 @@
 'use client';
 
 import { useState } from 'react';
+import { CustomSelect } from '@boxpistols/react-map-vite';
 
 export default function Page() {
     const [activeTab, setActiveTab] = useState('flight');
+    const [selectedColor, setSelectedColor] = useState('red');
 
     return (
         <div
@@ -146,7 +148,6 @@ export default function Page() {
                         </p>
                     </div>
                 </div>
-
                 <div
                     className="bg-white/5 backdrop-blur-lg rounded-xl p-8 border border-white/10"
                     data-oid="p3hh1yg"
@@ -191,10 +192,27 @@ export default function Page() {
                         data-oid="8gd7qu5"
                     >
                         {/* Placeholder for tab content */}
-                        <div className="flex items-center justify-center h-full" data-oid="1.86st4">
+                        <div
+                            className="flex flex-col items-center justify-center h-full"
+                            data-oid="1.86st4"
+                        >
                             <p className="text-gray-400" data-oid="8a:5egt">
                                 デモコンテンツがここに表示されます
                             </p>
+                            <div
+                                className="grid grid-cols-1 md:grid-cols-2 gap-6"
+                                data-oid="a879-fg"
+                            >
+                                <CustomSelect
+                                    label="色を選択"
+                                    options={[
+                                        { value: 'red', label: '赤' },
+                                        { value: 'blue', label: '青' },
+                                        { value: 'green', label: '緑' },
+                                    ]}
+                                    required
+                                />
+                            </div>
                         </div>
                     </div>
                 </div>

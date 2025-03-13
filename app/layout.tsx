@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
-
+import ThemeRegistry from './components/ThemeRegistry';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
@@ -13,7 +13,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     return (
         <html lang="en" data-oid="gje88am">
             <body className={inter.className} data-oid="om-_-dz">
-                {children}
+                <ThemeRegistry>{children}</ThemeRegistry>
             </body>
         </html>
     );
