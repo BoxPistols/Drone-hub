@@ -16,7 +16,7 @@ export default function Page() {
             data-oid="hi3wvtz"
         >
             <nav
-                className="bg-white/10 backdrop-blur-lg border-b border-white/10
+                className="bg-white/10 backdrop-blur-sm border-b border-white/10
                 sticky top-0 w-full z-10
                 "
                 data-oid="0q4vcpj"
@@ -190,12 +190,12 @@ export default function Page() {
                         </button>
                     </div>
                     <div
-                        className="h-96 bg-white/5 rounded-lg border border-white/10"
+                        className="h-96 bg-white/5 rounded-lg border border-white/10 px-6 py-4"
                         data-oid="8gd7qu5"
                     >
                         {/* Placeholder for tab content */}
                         <div
-                            className="flex flex-col items-center justify-center h-full"
+                            className="flex flex-col -items-center -justify-center px-8 py-8 h-full"
                             data-oid="1.86st4"
                         >
                             <div
@@ -234,8 +234,10 @@ export default function Page() {
                 </div>
             </main>
 
-            <footer className="bg-white/5 border-t border-white/10 mt-20" data-oid="l2pup6r">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8" data-oid="x0vgsqd">
+            <footer className="bg-white/10 backdrop-blur-sm border-t border-white/10 mt-10
+            sticky bottom-0 w-full z-10"
+                data-oid="l2pup6r">
+                <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-3" data-oid="x0vgsqd">
                     <div className="text-center text-gray-400" data-oid="qvnse58">
                         <p data-oid="qh50-8i">© 2024 DroneHub. All rights reserved.</p>
                     </div>
