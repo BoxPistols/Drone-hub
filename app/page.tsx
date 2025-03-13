@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { CustomSelect } from '@boxpistols/react-map-vite';
+import { Typography } from '@mui/material';
 
 export default function Page() {
     const [activeTab, setActiveTab] = useState('flight');
@@ -155,33 +156,30 @@ export default function Page() {
                     <div className="flex space-x-4 mb-6" data-oid="qtaugmx">
                         <button
                             onClick={() => setActiveTab('flight')}
-                            className={`px-4 py-2 rounded-lg ${
-                                activeTab === 'flight'
-                                    ? 'bg-indigo-600 text-white'
-                                    : 'text-gray-400 hover:text-white'
-                            }`}
+                            className={`px-4 py-2 rounded-lg ${activeTab === 'flight'
+                                ? 'bg-indigo-600 text-white'
+                                : 'text-gray-400 hover:text-white'
+                                }`}
                             data-oid="yudgx24"
                         >
                             飛行許可
                         </button>
                         <button
                             onClick={() => setActiveTab('manage')}
-                            className={`px-4 py-2 rounded-lg ${
-                                activeTab === 'manage'
-                                    ? 'bg-indigo-600 text-white'
-                                    : 'text-gray-400 hover:text-white'
-                            }`}
+                            className={`px-4 py-2 rounded-lg ${activeTab === 'manage'
+                                ? 'bg-indigo-600 text-white'
+                                : 'text-gray-400 hover:text-white'
+                                }`}
                             data-oid="d4nqlxo"
                         >
                             機体管理
                         </button>
                         <button
                             onClick={() => setActiveTab('route')}
-                            className={`px-4 py-2 rounded-lg ${
-                                activeTab === 'route'
-                                    ? 'bg-indigo-600 text-white'
-                                    : 'text-gray-400 hover:text-white'
-                            }`}
+                            className={`px-4 py-2 rounded-lg ${activeTab === 'route'
+                                ? 'bg-indigo-600 text-white'
+                                : 'text-gray-400 hover:text-white'
+                                }`}
                             data-oid="k_3o:1o"
                         >
                             経路計画
@@ -196,22 +194,36 @@ export default function Page() {
                             className="flex flex-col items-center justify-center h-full"
                             data-oid="1.86st4"
                         >
-                            <p className="text-gray-400" data-oid="8a:5egt">
-                                デモコンテンツがここに表示されます
-                            </p>
                             <div
-                                className="grid grid-cols-1 md:grid-cols-2 gap-6"
-                                data-oid="a879-fg"
+                                className="grid gap-4"
                             >
-                                <CustomSelect
-                                    label="色を選択"
-                                    options={[
-                                        { value: 'red', label: '赤' },
-                                        { value: 'blue', label: '青' },
-                                        { value: 'green', label: '緑' },
-                                    ]}
-                                    required
-                                />
+                                <Typography variant="xl" mb={2}>
+                                    {activeTab === 'flight' && '飛行許可'}
+                                    {activeTab === 'manage' && '機体管理'}
+                                    {activeTab === 'route' && '経路計画'}
+                                </Typography>
+
+                                <Typography variant="xs" mb={2}>
+                                    {activeTab === 'flight' && '簡単な手順で飛行許可申請を完了。申請状況もリアルタイムで確認可能。'}
+                                    {activeTab === 'manage' && 'ドローン機体の詳細情報を一元管理。メンテナンス履歴も簡単に記録。'}
+                                    {activeTab === 'route' && 'MapLibreを使用した高精度な飛行経路の設計と管理が可能。'}
+                                </Typography>
+
+                                <div
+                                    className="grid grid-cols-1 md:grid-cols-2 gap-6"
+                                    data-oid="a879-fg"
+                                >
+                                    <CustomSelect
+                                        label="色を選択"
+                                        multiple
+                                        options={[
+                                            { label: '赤', value: 'red' },
+                                            { label: '青', value: 'blue' },
+                                            { label: '黄', value: 'yellow' },
+                                        ]}
+                                        required
+                                    />
+                                </div>
                             </div>
                         </div>
                     </div>
