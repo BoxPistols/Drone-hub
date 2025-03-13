@@ -2,7 +2,9 @@
 
 import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
-import theme from '@/lib/theme'; // ルートからの絶対パス
+// import theme from '@/lib/theme'; // ルートからの絶対パス
+import { theme } from '@boxpistols/react-map-vite';
+// import { darkTheme } from '@boxpistols/react-map-vite/theme';
 
 export default function ThemeRegistry({ children }: { children: React.ReactNode }) {
     return (
