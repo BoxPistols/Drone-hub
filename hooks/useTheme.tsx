@@ -17,27 +17,30 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export const ThemeProvider = ({ children }: { children: ReactNode }) => {
     const [mode, setMode] = useState<ThemeMode>('dark');
+    const [isInitialized, setIsInitialized] = useState(false);
     const prefersDarkMode = typeof window !== 'undefined' && window.matchMedia &&
         window.matchMedia('(prefers-color-scheme: dark)').matches;
 
+    // アプリ起動時にlocalStorageから読み込み (初回のみ実行)
     useEffect(() => {
-        // ローカルストレージから保存されたテーマ設定を取得
+        if (typeof window === 'undefined') return;
+
         const savedMode = localStorage.getItem('theme-mode') as ThemeMode | null;
         if (savedMode) {
             setMode(savedMode);
         } else if (prefersDarkMode) {
-            // システム設定がダークモードの場合
             setMode('dark');
         }
-    }, [prefersDarkMode]);
+        setIsInitialized(true);
+    }, [prefersDarkMode]); // 空の依存配列で初回のみ実行
 
+    // モード変更時にlocalStorageに保存 (初期化完了後のみ)
     useEffect(() => {
-        // モードが変更されたらローカルストレージに保存
-        localStorage.setItem('theme-mode', mode);
+        if (!isInitialized) return;
 
-        // HTML要素にデータ属性を追加（CSSでのスタイリング用）
+        localStorage.setItem('theme-mode', mode);
         document.documentElement.setAttribute('data-theme', mode);
-    }, [mode]);
+    }, [mode, isInitialized]);
 
     // システムのテーマ変更を監視
     useEffect(() => {
@@ -45,7 +48,10 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
 
         const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
         const handleChange = () => {
-            document.documentElement.setAttribute('data-theme', mediaQuery.matches ? 'dark' : 'light');
+            document.documentElement.setAttribute(
+                'data-theme',
+                mediaQuery.matches ? 'dark' : 'light'
+            );
         };
 
         mediaQuery.addEventListener('change', handleChange);

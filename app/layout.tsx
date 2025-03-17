@@ -17,6 +17,27 @@ export default function RootLayout({
 }) {
     return (
         <html lang="ja">
+            <head>
+                {/* テーマフラッシュ防止スクリプト */}
+                <script dangerouslySetInnerHTML={{
+                    __html: `
+                        (function() {
+                            try {
+                                var mode = localStorage.getItem('theme-mode');
+                                if (mode) {
+                                    document.documentElement.setAttribute('data-theme', mode);
+                                    if (mode === 'dark') {
+                                        document.documentElement.classList.add('dark');
+                                    }
+                                } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                                    document.documentElement.setAttribute('data-theme', 'dark');
+                                    document.documentElement.classList.add('dark');
+                                }
+                            } catch (e) {}
+                        })();
+                    `
+                }} />
+            </head>
             <body className={inter.className}>
                 <ThemeProvider>{children}</ThemeProvider>
             </body>
