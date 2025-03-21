@@ -106,6 +106,6 @@ const createAppTheme = (mode: 'light' | 'dark'): Theme =>
         },
     });
 
-export const theme = createAppTheme('light');
+export const lightTheme = createAppTheme('light');
 export const darkTheme = createAppTheme('dark');
 export { colorData, typographyOptions };
