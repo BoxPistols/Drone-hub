@@ -10,17 +10,14 @@ export const metadata: Metadata = {
     description: '飛行許可申請から経路計画まで、すべてをシームレスに',
 };
 
-export default function RootLayout({
-    children,
-}: {
-    children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
     return (
         <html lang="ja">
             <head>
                 {/* テーマフラッシュ防止スクリプト */}
-                <script dangerouslySetInnerHTML={{
-                    __html: `
+                <script
+                    dangerouslySetInnerHTML={{
+                        __html: `
                         (function() {
                             try {
                                 var mode = localStorage.getItem('theme-mode');
@@ -35,8 +32,9 @@ export default function RootLayout({
                                 }
                             } catch (e) {}
                         })();
-                    `
-                }} />
+                    `,
+                    }}
+                />
             </head>
             <body className={inter.className}>
                 <ThemeProvider>{children}</ThemeProvider>

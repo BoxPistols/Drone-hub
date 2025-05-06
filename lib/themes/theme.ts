@@ -1,32 +1,55 @@
 import { type Theme, type ThemeOptions, createTheme } from '@mui/material/styles';
+import { generateCssVariables, tokenColors } from './tokens';
+import { TypographyOptions } from '@mui/material/styles/createTypography';
 import {
     colorData,
     typographyComponentsOverrides,
     typographyOptions,
 } from '@boxpistols/react-map-vite';
-import { TypographyOptions } from '@mui/material/styles/createTypography';
 
+// パレットを新しいトークンシステムで作成
 const createPalette = (mode: 'light' | 'dark') => {
-    const colors = mode === 'light' ? colorData : colorData.dark;
+    const tokens = mode === 'light' ? tokenColors.light : tokenColors.dark;
+    const isLight = mode === 'light';
+
     return {
         mode,
-        ...colors,
+        primary: tokens.primary,
+        secondary: tokens.secondary,
+        // 背景色
         background: {
-            ...colors.background,
-            default: colors.background.default,
-            paper: colors.background.paper,
+            default: isLight ? '#f8f9fa' : '#303030',
+            paper: isLight ? '#ffffff' : '#424242',
         },
+        // テキスト色を直接指定
+        text: {
+            primary: isLight ? '#212121' : '#ffffff',
+            secondary: isLight ? '#757575' : '#bbbbbb',
+            disabled: isLight ? '#9e9e9e' : '#757575',
+        },
+        // 必要に応じて他のプロパティも追加
     };
 };
 
+// コンポーネントスタイルを更新
 const createComponentStyles = (mode: 'light' | 'dark'): ThemeOptions['components'] => {
-    const colors = mode === 'light' ? colorData : colorData.dark;
+    const tokens = mode === 'light' ? tokenColors.light : tokenColors.dark;
+    const isLight = mode === 'light';
+    const palette = createPalette(mode);
+
     return {
         MuiCssBaseline: {
             styleOverrides: {
+                ':root': {
+                    // CSS変数の適用
+                    ...Object.entries(generateCssVariables(mode)).reduce(
+                        (acc, [key, value]) => ({ ...acc, [key]: value }),
+                        {},
+                    ),
+                },
                 body: {
-                    backgroundColor: colors.background.default,
-                    color: colors.text.primary,
+                    backgroundColor: mode === 'light' ? '#f8f9fa' : '#303030',
+                    color: palette.text.primary,
                     WebkitFontSmoothing: 'antialiased',
                     MozOsxFontSmoothing: 'grayscale',
                 },
@@ -35,8 +58,8 @@ const createComponentStyles = (mode: 'light' | 'dark'): ThemeOptions['components
         MuiAppBar: {
             styleOverrides: {
                 root: {
-                    backgroundColor: colors.background.paper,
-                    color: colors.text.primary,
+                    backgroundColor: isLight ? '#ffffff' : '#424242',
+                    color: palette.text.primary,
                 },
             },
         },
@@ -55,10 +78,10 @@ const createComponentStyles = (mode: 'light' | 'dark'): ThemeOptions['components
                 },
                 contained: {
                     '&.MuiButton-contained.MuiButton-root': {
-                        color: colors.text.white,
+                        color: tokens.primary.contrastText,
                     },
                     '&.MuiButton-contained.MuiButton-root.MuiButton-containedInherit': {
-                        color: colors.text.primary,
+                        color: isLight ? '#212121' : '#ffffff',
                     },
                 },
             },
@@ -67,17 +90,17 @@ const createComponentStyles = (mode: 'light' | 'dark'): ThemeOptions['components
         MuiTableCell: {
             styleOverrides: {
                 root: {
-                    borderBottom: `1px solid ${colors.divider}`,
+                    borderBottom: `1px solid ${isLight ? '#e0e0e0' : '#424242'}`,
                 },
                 head: {
-                    backgroundColor: colors.background.paper,
-                    color: colors.text.primary,
+                    backgroundColor: palette.background.paper,
+                    color: palette.text.primary,
                     fontWeight: 700,
                     letterSpacing: '0.05em',
                     padding: '0.5em 1.25em',
                 },
                 body: {
-                    color: colors.text.secondary,
+                    color: palette.text.secondary,
                     padding: '0.5em 1.25em',
                 },
             },

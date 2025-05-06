@@ -4,86 +4,76 @@ import { createContext, useContext, useEffect, useState, ReactNode, useMemo } fr
 import { ThemeProvider as MuiThemeProvider } from '@mui/material/styles';
 import { CssBaseline } from '@mui/material';
 import { darkTheme, lightTheme } from '../lib/themes/theme';
+import { generateCssVariables } from '../lib/themes/tokens';
 
-type ThemeMode = 'light' | 'dark' | 'system';
+export type ThemeMode = 'light' | 'dark';
 
 interface ThemeContextType {
-  mode: ThemeMode;
-  setMode: (mode: ThemeMode) => void;
-  theme: typeof lightTheme;
+    mode: ThemeMode;
+    toggleTheme: () => void;
+    theme: typeof lightTheme | typeof darkTheme;
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export const ThemeProvider = ({ children }: { children: ReactNode }) => {
-  const [mode, setMode] = useState<ThemeMode>('dark');
-  const [isInitialized, setIsInitialized] = useState(false);
-  const prefersDarkMode = typeof window !== 'undefined' && window.matchMedia &&
-    window.matchMedia('(prefers-color-scheme: dark)').matches;
+    // システム設定の初期検出
+    const prefersDark =
+        typeof window !== 'undefined'
+            ? window.matchMedia('(prefers-color-scheme: dark)').matches
+            : false;
 
-  // アプリ起動時にlocalStorageから読み込み (初回のみ実行)
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
+    const [mode, setMode] = useState<ThemeMode>(
+        // ローカルストレージとシステム設定のハイブリッドアプローチ
+        typeof window !== 'undefined'
+            ? (localStorage.getItem('theme') as ThemeMode) || (prefersDark ? 'dark' : 'light')
+            : 'light',
+    );
 
-    const savedMode = localStorage.getItem('theme-mode') as ThemeMode | null;
-    if (savedMode) {
-      setMode(savedMode);
-    } else if (prefersDarkMode) {
-      setMode('dark');
-    }
-    setIsInitialized(true);
-  }, [prefersDarkMode]); // prefersDarkModeが変更されたときに実行
+    const theme = mode === 'light' ? lightTheme : darkTheme;
 
-  // モード変更時にlocalStorageに保存 (初期化完了後のみ)
-  useEffect(() => {
-    if (!isInitialized) return;
+    useEffect(() => {
+        // DOM操作を統一
+        const root = document.documentElement;
 
-    localStorage.setItem('theme-mode', mode);
-    document.documentElement.setAttribute('data-theme', mode);
-  }, [mode, isInitialized]);
+        // 1. Tailwind用のクラス設定
+        if (mode === 'dark') {
+            root.classList.add('dark');
+        } else {
+            root.classList.remove('dark');
+        }
 
-  // システムのテーマ変更を監視
-  useEffect(() => {
-    if (mode !== 'system') return;
+        // 2. data-theme属性設定
+        root.setAttribute('data-theme', mode);
 
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    const handleChange = () => {
-      document.documentElement.setAttribute(
-        'data-theme',
-        mediaQuery.matches ? 'dark' : 'light'
-      );
+        // 3. CSS変数の適用
+        const cssVars = generateCssVariables(mode);
+        Object.entries(cssVars).forEach(([key, value]) => {
+            root.style.setProperty(key, value);
+        });
+
+        // 4. ストレージに保存
+        localStorage.setItem('theme', mode);
+    }, [mode]);
+
+    const toggleTheme = () => {
+        setMode((prev) => (prev === 'light' ? 'dark' : 'light'));
     };
 
-    mediaQuery.addEventListener('change', handleChange);
-    return () => mediaQuery.removeEventListener('change', handleChange);
-  }, [mode]);
-
-  // 現在のモードに基づいてテーマオブジェクトを定義
-  const theme = useMemo(() => {
-    const resolvedMode =
-      mode === 'system' ? (prefersDarkMode ? 'dark' : 'light') : mode;
-    return resolvedMode === 'dark' ? darkTheme : lightTheme;
-  }, [mode, prefersDarkMode]);
-
-  // HTMLのクラスを追加
-  useEffect(() => {
-    document.documentElement.classList.toggle('dark', theme.palette.mode === 'dark');
-  }, [theme.palette.mode]);
-
-  return (
-    <ThemeContext.Provider value={{ mode, setMode, theme }}>
-      <MuiThemeProvider theme={theme}>
-        <CssBaseline />
-        {children}
-      </MuiThemeProvider>
-    </ThemeContext.Provider>
-  );
+    return (
+        <ThemeContext.Provider value={{ mode, toggleTheme, theme }}>
+            <MuiThemeProvider theme={theme}>
+                <CssBaseline />
+                {children}
+            </MuiThemeProvider>
+        </ThemeContext.Provider>
+    );
 };
 
 export const useTheme = () => {
-  const context = useContext(ThemeContext);
-  if (context === undefined) {
-    throw new Error('useTheme must be used within a ThemeProvider');
-  }
-  return context;
+    const context = useContext(ThemeContext);
+    if (context === undefined) {
+        throw new Error('useTheme must be used within a ThemeProvider');
+    }
+    return context;
 };
