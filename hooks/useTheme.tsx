@@ -1,6 +1,8 @@
 'use client';
 
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
+import { ThemeProvider as MuiThemeProvider } from '@mui/material/styles';
+import { lightTheme, darkTheme } from '../lib/themes/theme';
 
 type ThemeMode = 'light' | 'dark';
 
@@ -41,7 +43,13 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
         setMode,
     };
 
-    return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
+    return (
+        <ThemeContext.Provider value={value}>
+            <MuiThemeProvider theme={mode === 'light' ? lightTheme : darkTheme}>
+                {children}
+            </MuiThemeProvider>
+        </ThemeContext.Provider>
+    );
 }
 
 export function useTheme() {

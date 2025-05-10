@@ -78,7 +78,7 @@ export default function Page() {
                     {[...Array(3)].map((_, index) => (
                         <div
                             key={index}
-                            className="bg-white/5 backdrop-blur-lg rounded-xl p-6 border border-white/10 hover:border-indigo-500 transition-all"
+                            className={`${mode === 'dark' ? 'bg-white/5 border-white/10' : 'bg-slate-800/5 border-slate-800/10'} backdrop-blur-lg rounded-xl p-6 border hover:border-indigo-500 transition-all`}
                             data-oid="s0y4p:h"
                         >
                             <div
