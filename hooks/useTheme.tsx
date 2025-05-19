@@ -45,7 +45,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
     return (
         <ThemeContext.Provider value={value}>
-            <MuiThemeProvider theme={theme}>
+            <MuiThemeProvider theme={mode === 'light' ? lightTheme : darkTheme}>
                 {children}
             </MuiThemeProvider>
         </ThemeContext.Provider>
